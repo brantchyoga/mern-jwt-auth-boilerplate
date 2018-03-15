@@ -14,14 +14,16 @@ var jwt = require('jsonwebtoken');
 router.post('/login', (req,res,next)=>{
   let hashedPass = ''
   let passwordMatch = false
-  console.log(req.body.password);
+
+  console.log(req.body.password)
+
   User.findOne({email:req.body.email}, function(error, user){
     hashedPass = user.password
     //Compare hashedPass to submitted password
-    passwordMatch = bcrypt.compareSync(req.body.password, hasedPash)
+    passwordMatch = bcrypt.compareSync(req.body.password, hashedPass)
     if (passwordMatch){
       //Passwords match...
-      var token = jwt.sign(user, process.env.JWT_SECRET, {
+      var token = jwt.sign(user.toObject(), process.env.JWT_SECRET, {
         expiresIn: 60 * 60 *24 //expires in 24hr
       })
       res.json({user, token})
